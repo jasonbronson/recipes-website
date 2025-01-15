@@ -95,6 +95,21 @@ onMounted(async () => {
   margin-bottom: 2rem;
 }
 
+@media (max-width: 768px) {
+  .recipe-header {
+    grid-template-columns: 1fr;
+  }
+
+  .image-section {
+    margin-top: 1rem;
+  }
+
+  .image-section img {
+    width: 100%;
+    height: auto;
+  }
+}
+
 .title-section {
   display: flex;
   flex-direction: column;
@@ -105,6 +120,12 @@ onMounted(async () => {
   margin: 0;
   font-size: 2.5rem;
   color: #333;
+}
+
+@media (max-width: 768px) {
+  .title-section h1 {
+    font-size: 1.5rem;
+  }
 }
 
 .meta {
