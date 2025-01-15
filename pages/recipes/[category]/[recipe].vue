@@ -6,6 +6,9 @@
         <header class="recipe-header">
           <div class="title-section">
             <h1>{{ recipe.title }}</h1>
+            <div class="image-section">
+              <img :src="recipe.image" :alt="recipe.title" />
+            </div>
             <div class="meta">
               <div class="meta-item">
                 <span class="label">Prep Time:</span>
@@ -30,9 +33,6 @@
                 recipe.originalURL
               }}</a>
             </div>
-          </div>
-          <div class="image-section">
-            <img :src="recipe.image" :alt="recipe.title" />
           </div>
         </header>
 
@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import Header from "~/components/Header.vue";

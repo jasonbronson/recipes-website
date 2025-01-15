@@ -8,7 +8,7 @@
         <p>Discover our favorite recipes and baking awesomeness.</p>
       </section>
 
-      <section class="featured-recipes">
+      <section v-if="hasRecipes" class="featured-recipes">
         <h2>Most Recent Recipes</h2>
         <div class="container">
           <div class="card" v-for="recipe in recipes" :key="recipe.title">
@@ -23,6 +23,9 @@
           </div>
         </div>
       </section>
+      <section v-else>
+        <h1>No recipes found...</h1>
+      </section>
     </main>
   </div>
 </template>
@@ -36,6 +39,7 @@ import { config } from "~/config";
 
 const recipes = ref([]);
 const route = useRoute();
+const hasRecipes = computed(() => recipes.value && recipes.value.length > 0);
 
 const fetchRecipes = async (category) => {
   try {
