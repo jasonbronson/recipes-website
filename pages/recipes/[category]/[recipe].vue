@@ -7,7 +7,7 @@
           <div class="title-section">
             <h1>{{ recipe.title }}</h1>
             <div class="image-section">
-              <!-- <img :src="recipe.image" :alt="recipe.title" /> -->
+              <img :src="recipe.image" :alt="recipe.title" />
             </div>
             <div class="meta">
               <div class="meta-item">
