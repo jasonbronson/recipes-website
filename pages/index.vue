@@ -7,7 +7,11 @@
         <div class="container">
           <div class="card" v-for="recipe in recipes" :key="recipe.title">
             <a :href="`${recipe.link}`">
-              <img :alt="recipe.title" class="recipe-image" />
+              <!-- <img
+                :src="recipe.image"
+                :alt="recipe.title"
+                class="recipe-image"
+              /> -->
             </a>
             <div class="category">
               {{ capitalizeFirstLetter(recipe.category) }}
