@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Header />
-
+    <Header @search="performSearch" />
     <main>
-      <section v-if="hasRecipes" class="featured-recipes">
+      <section v-if="results.length > 0" class="search-results">
+        <h2>Search Results</h2>
         <div class="container">
-          <div class="card" v-for="recipe in recipes" :key="recipe.title">
-            <a :href="`${recipe.link}`">
+          <div class="card" v-for="recipe in results" :key="recipe.title">
+            <a :href="`/recipes/${recipe.category}/${recipe.title}`">
               <img
                 :src="recipe.image"
                 :alt="recipe.title"
@@ -16,7 +16,7 @@
             <div class="category">
               {{ capitalizeFirstLetter(recipe.category) }}
             </div>
-            <a :href="`${recipe.link}`">
+            <a :href="`/recipes/${recipe.category}/${recipe.title}`">
               <h3>{{ recipe.title }}</h3>
             </a>
             <div class="date">{{ formatDate(recipe.date) }}</div>
@@ -24,47 +24,40 @@
         </div>
       </section>
       <section v-else>
-        <h1>No recipes found...</h1>
+        <h1>No results found...</h1>
       </section>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
-import { useRoute } from "vue-router";
+import { ref, onMounted } from "vue";
 import axios from "axios";
+import { useRoute } from "vue-router";
 import Header from "~/components/Header.vue";
 import { config } from "~/config";
 
-const recipes = ref([]);
 const route = useRoute();
-const hasRecipes = computed(() => recipes.value && recipes.value.length > 0);
+const results = ref([]);
 
-const fetchRecipes = async (category) => {
+const performSearch = async (term) => {
   try {
     const response = await axios.get(
-      `${config.apiBaseUrl}/get-recipes?category=${category}`
+      `${config.apiBaseUrl}/search-recipes?q=${term}`
     );
-    recipes.value = response.data;
+    results.value = response.data;
   } catch (error) {
-    console.error("Error fetching recipes:", error);
+    console.error("Error fetching search results:", error);
   }
 };
 
-// Fetch recipes on initial load
+// Fetch search term from query parameters on mount
 onMounted(() => {
-  const category = route.query.category || ""; // Get category from query parameters
-  fetchRecipes(category); // Fetch recipes based on the category
-});
-
-// Watch for changes in the category query parameter
-watch(
-  () => route.query.category,
-  (newCategory) => {
-    fetchRecipes(newCategory || ""); // Fetch recipes whenever the category changes
+  const searchTerm = route.query.q || "";
+  if (searchTerm) {
+    performSearch(searchTerm);
   }
-);
+});
 
 // Method to format the date
 const formatDate = (dateString) => {
@@ -84,18 +77,25 @@ const capitalizeFirstLetter = (string) => {
 </script>
 
 <style scoped>
-/* Add your homepage styles here */
-.recipe-image {
-  width: 100%; /* Set the width to 100% of the card */
-  height: 200px; /* Set a fixed height */
-  object-fit: cover; /* Ensure the image covers the area without distortion */
+.search-results {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
 }
+
 .container {
   display: flex;
   flex-wrap: wrap; /* Allow cards to wrap to the next line */
 }
+
 .card {
   flex: 1 1 30%; /* Allow cards to take up to 30% of the container width */
   margin: 10px; /* Add some margin between cards */
+}
+
+.recipe-image {
+  width: 100%; /* Set the width to 100% of the card */
+  height: 200px; /* Set a fixed height */
+  object-fit: cover; /* Ensure the image covers the area without distortion */
 }
 </style>
